@@ -15,3 +15,5 @@ sim/
 
 *.[Oo][Ll][Dd]
 *.[Bb][Aa][Kk]
+
+.vscode/
