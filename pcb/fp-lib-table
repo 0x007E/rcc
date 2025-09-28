@@ -1,0 +1,6 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "PTS530")(type "KiCad")(uri "${KIPRJMOD}/lib/PTS530.pretty")(options "")(descr ""))
+  (lib (name "Battery_BH")(type "KiCad")(uri "${KIPRJMOD}/lib/Battery_BH.pretty")(options "")(descr ""))
+  (lib (name "Images")(type "KiCad")(uri "${KIPRJMOD}/lib/Images.pretty")(options "")(descr ""))
+)

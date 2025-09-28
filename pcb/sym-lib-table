@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "Battery_BH")(type "KiCad")(uri "${KIPRJMOD}/lib/BH-67D-5.kicad_sym")(options "")(descr ""))
+)
