@@ -58,7 +58,7 @@ void adc_init(void)
  */
 inline void adc_disable(void)
 {
-    ADC0.CTRLA &= ~ADC_ENABLE_bm;
+    ADC0.CTRLA &= ~(ADC_RUNSTBY_bm | ADC_ENABLE_bm);
 }
 
 /**

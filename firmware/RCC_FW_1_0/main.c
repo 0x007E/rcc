@@ -85,8 +85,13 @@ static void system_shutdown(void)
     battery_disable();
     led_disable();
 
-    PORTA.DIRCLR = PIN7_bm;
+    PORTA.DIRCLR = PIN7_bm | PIN6_bm | PIN3_bm | PIN2_bm | PIN1_bm | PIN0_bm;
     PORTA.PIN7CTRL =  PORT_ISC_BOTHEDGES_gc;
+    PORTA.PIN6CTRL =  PORT_PULLUPEN_bm;
+    PORTA.PIN3CTRL =  PORT_PULLUPEN_bm;
+    PORTA.PIN2CTRL =  PORT_PULLUPEN_bm;
+    PORTA.PIN1CTRL =  PORT_PULLUPEN_bm;
+    PORTA.PIN0CTRL =  PORT_PULLUPEN_bm;
     PORTA.INTFLAGS = PORT_INT_7_bm;
 
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -120,6 +125,7 @@ int main(void)
         led_blink(LED_Position_Left | LED_Position_Right_Alternating, led_status_color(LED_Status_Error, LED_MIN_INTENSITY), LED_Delay_MS_200, 2);
     }
 
+	battery_disable();
 	timer_init();
 	sei();
 	
