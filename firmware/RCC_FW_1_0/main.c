@@ -4,6 +4,7 @@
 #define SWITCH_COMMAND_EXECUTE_MS 3000UL
 #define SWITCH_SYSTEM_OFF_TIME_MS 3000UL
 #define COLOR_FADE_DELAY_MS 10UL
+#define COLOR_INTENSITY_DELAY_MS 350UL
 #define ENABLE_EEPROM_WRITE
 
 #include <avr/io.h>
@@ -236,7 +237,7 @@ int main(void)
                         }
 
     					led_color(position, *led);
-    					_delay_ms(COLOR_FADE_DELAY_MS);
+    					_delay_ms(COLOR_INTENSITY_DELAY_MS);
 					}
                     break;
 				default:
