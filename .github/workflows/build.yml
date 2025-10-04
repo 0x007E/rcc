@@ -127,18 +127,20 @@ jobs:
               libraries+="./temp/${filename}.o "
             done < <(find "${{ env.LIBRARY_PATH }}" -type f -name '*.c')
 
+            if [[ "${{ env.LIBRARY_PATH }}" == "${{ env.PROJECT_PATH }}" ]]; then
+              rm -f ./temp/main.o
+              libraries=$(echo "$libraries" | sed 's#\./temp/main\.o ##g')
+            fi
+
             echo "$libraries"
           }
-
-          if [[ "${{ env.LIBRARY_PATH }}" == "${{ env.PROJECT_PATH }}" ]]; then
-            rm -f ./temp/main.o
-          fi
           
           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=${{ env.DEVICE }} -std=gnu99 \
             -B ./DFP/gcc/dev/${{ env.DEVICE }} \
             -I ./DFP/include \
             ${{ env.PREPROCESSOR }} \
             -c ${{ env.PROJECT_PATH }}/main.c -o ./temp/main.o
+
           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=${{ env.DEVICE }} \
             -B ./DFP/gcc/dev/${{ env.DEVICE }} \
             -I ./DFP/include \
