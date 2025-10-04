@@ -12,7 +12,7 @@ jobs:
       SchematicFileExtension: "kicad_sch"
       PCBFileExtension: "kicad_pcb"
       OutputFolder: "./output"
-      ConfigFilePath: ".kibot/build.kibot.yaml"
+      ConfigFilePath: ".kibot/release.kibot.yaml"
     runs-on: ubuntu-latest
     steps:
     - name: Fetch repository
