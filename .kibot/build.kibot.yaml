@@ -69,7 +69,7 @@ outputs:
       format: 'PDF'
       output : 'PCB.%x'
       plot_sheet_reference: true
-      scaling: 1.0
+      scaling: 2.0
       pages:
         - layers:
           - layer: F.Cu
