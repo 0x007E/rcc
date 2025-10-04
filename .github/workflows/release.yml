@@ -1,0 +1,331 @@
+name: RCC Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  export-kicad:
+    env:
+      BaseFileName: "RCC"
+      SchematicFileExtension: "kicad_sch"
+      PCBFileExtension: "kicad_pcb"
+      OutputFolder: "./output"
+      ConfigFilePath: ".kibot/build.kibot.yaml"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch repository
+      uses: actions/checkout@v4
+    
+    - name: Prepare output directory
+      run: |
+        mkdir -p ${{ env.OutputFolder }}
+        cp -r ./pcb ${{ env.OutputFolder }}/kicad
+        cp ./LICENSE.md ${{ env.OutputFolder }}
+
+    - name: Run KiBOT
+      uses: INTI-CMNB/KiBot@v2_dk7
+      with:
+        config: ${{ env.ConfigFilePath }}
+        dir: ${{ env.OutputFolder }}
+        schema: "./pcb/${{ env.BaseFileName }}.${{ env.SchematicFileExtension }}"
+        board: "./pcb/${{ env.BaseFileName }}.${{ env.PCBFileExtension }}"
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: kicad-export
+        path: ${{ env.OutputFolder }}
+        retention-days: 1
+
+  export-freecad:
+    env:
+      FREECADVERSION: "1.0.2"
+      FreeCADFileName: "./mechanical/housing.FCStd"
+      OutputFolder: "./output"
+      PartType: "PartDesign::Body"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch repository
+      uses: actions/checkout@v4
+    
+    - name: Prepare output directory
+      run: |
+        mkdir -p ${{ env.OutputFolder }}
+        cp -r ./mechanical ${{ env.OutputFolder }}
+        cp ./LICENSE.md ${{ env.OutputFolder }}
+
+    - name: Install FreeCAD
+      run: |
+          wget https://github.com/FreeCAD/FreeCAD/releases/download/${{ env.FREECADVERSION }}/FreeCAD_${{ env.FREECADVERSION }}-conda-Linux-x86_64-py311.AppImage
+          chmod 0777 FreeCAD_${{ env.FREECADVERSION }}-conda-Linux-x86_64-py311.AppImage
+          ./FreeCAD_${{ env.FREECADVERSION }}-conda-Linux-x86_64-py311.AppImage --appimage-extract
+    - name: Get FreeCAD Export
+      run: |
+          git clone https://github.com/0x007E/pyfreecadexport.git
+    - name: Export STEP Files
+      run: |
+          ./squashfs-root/usr/bin/python ./pyfreecadexport/src/pyfreecadexport.py -f "${{ env.FreeCADFileName }}" -p "${{ env.PartType }}" -d "${{ env.OutputFolder }}" -e "step" -l "squashfs-root/usr/lib/"
+          ./squashfs-root/usr/bin/python ./pyfreecadexport/src/pyfreecadexport.py -f "${{ env.FreeCADFileName }}" -p "${{ env.PartType }}" -d "${{ env.OutputFolder }}" -e "stl" -l "squashfs-root/usr/lib/"
+    
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: freecad-export
+        path: ${{ env.OutputFolder }}
+        retention-days: 1
+  
+  build-firmware:
+    env:
+      TOOLCHAIN: "3.7.0.1796"
+      DFP: "ATtiny_DFP.2.0.368"
+      DEVICE: "attiny402"
+      OUTPUT_FOLDER: "./output"
+      LIBRARY_PATH: "./firmware/RCC_FW_1_0"
+      PROJECT_PATH: "./firmware/RCC_FW_1_0"
+      FIRMWARE_NAME: "rcc_t402"
+      PREPROCESSOR: "-DF_CPU=20000000UL"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch repository
+      uses: actions/checkout@v5
+    - name: Copy License
+      run: |
+          mkdir -p ${{ env.OUTPUT_FOLDER }}
+          cp ./LICENSE.md ${{ env.OUTPUT_FOLDER }}
+    - name: Install zip
+      run: sudo apt-get install -y zip
+    - name: install-build-tools
+      run: |
+          wget https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/avr8-gnu-toolchain-${{ env.TOOLCHAIN }}-linux.any.x86_64.tar.gz
+          tar -xf *.tar.gz
+    - name: install-dfp-package
+      run: |
+          wget http://packs.download.atmel.com/Atmel.${{ env.DFP }}.atpack
+          unzip *.atpack -d ./DFP
+    - name: build-firmware
+      run: |
+          mkdir -p temp
+
+          build_with_defines() {
+            local defines="$1"
+            local libraries=""
+
+            while read -r file; do
+              local filename=$(basename -- "$file")
+              filename="${filename%.*}"
+
+              ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=${{ env.DEVICE }} -std=gnu99 \
+                -B ./DFP/gcc/dev/${{ env.DEVICE }} \
+                $defines \
+                -I ./DFP/include -c "${file}" -o "./temp/${filename}.o"
+
+              libraries+="./temp/${filename}.o "
+            done < <(find "${{ env.LIBRARY_PATH }}" -type f -name '*.c')
+
+            if [[ "${{ env.LIBRARY_PATH }}" == "${{ env.PROJECT_PATH }}" ]]; then
+              rm -f ./temp/main.o
+              libraries=$(echo "$libraries" | sed 's#\./temp/main\.o ##g')
+            fi
+
+            echo "$libraries"
+          }
+          
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=${{ env.DEVICE }} -std=gnu99 \
+            -B ./DFP/gcc/dev/${{ env.DEVICE }} \
+            -I ./DFP/include \
+            ${{ env.PREPROCESSOR }} \
+            -c ${{ env.PROJECT_PATH }}/main.c -o ./main.o
+
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=${{ env.DEVICE }} \
+            -B ./DFP/gcc/dev/${{ env.DEVICE }} \
+            -I ./DFP/include \
+            -o ./main.elf ./main.o \
+            ${{ env.PREPROCESSOR }} \
+            $(build_with_defines "${{ env.PREPROCESSOR }}")
+          
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data \
+            -O ihex ./main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.hex
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 \
+            -O ihex ./main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.eep
+
+          tar -czvf build.tar.gz ${{ env.OUTPUT_FOLDER }}
+          zip -r build.zip ${{ env.OUTPUT_FOLDER }}
+
+    - name: upload-firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-build
+        path: ${{ env.OUTPUT_FOLDER }}
+        retention-days: 1
+  
+  create-release:
+    needs: [export-kicad, export-freecad, build-firmware]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+            Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Download KiCad Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: kicad-export
+        path: ./artifact/kicad
+    - name: Display structure
+      run: ls -R ./artifact/kicad
+    - name: Create Compressed File
+      run: |
+        cd ./artifact
+        tar -czvf ./kicad.tar.gz ./kicad
+        zip -r ./kicad.zip ./kicad
+        cd ..
+
+    - name: Upload KiCAD Schematic
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/kicad/schematic/RCC-schematic.pdf
+        asset_name: schematic.pdf
+        asset_content_type: application/pdf
+
+    - name: Upload KiCAD PCB
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/kicad/pcb/PCB.pdf
+        asset_name: pcb.pdf
+        asset_content_type: application/pdf
+
+    - name: Upload KiCAD TOP Render
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/kicad/blender/top.png
+        asset_name: top.kicad.png
+        asset_content_type: image/png
+
+    - name: Upload KiCAD BOTTOM Render
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/kicad/blender/bottom.png
+        asset_name: bottom.kicad.png
+        asset_content_type: image/png
+
+    - name: Upload KiCAD Drill PDF
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/kicad/drill/RCC-drill_map.pdf
+        asset_name: drill.pdf
+        asset_content_type: application/pdf
+
+    - name: Upload KiCAD Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/kicad.tar.gz
+        asset_name: kicad.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload KiCAD Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/kicad.zip
+        asset_name: kicad.zip
+        asset_content_type: application/zip
+
+    - name: Download FreeCAD Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: freecad-export
+        path: ./artifact/freecad
+    - name: Display structure
+      run: ls -R ./artifact/freecad
+    - name: Create Compressed File
+      run: |
+        cp -r ./artifact/kicad/step ./artifact/freecad/pcb
+        cd ./artifact
+        tar -czvf ./freecad.tar.gz ./freecad
+        zip -r ./freecad.zip ./freecad
+        cd ..
+
+    - name: Upload FreeCAD Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/freecad.tar.gz
+        asset_name: freecad.tar.gz
+        asset_content_type: application/gzip
+    
+    - name: Upload FreeCAD Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/freecad.zip
+        asset_name: freecad.zip
+        asset_content_type: application/zip
+
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: firmware-build
+        path: ./artifact/build
+    - name: Display structure
+      run: ls -R ./artifact/build
+    - name: Create Compressed File
+      run: |
+        cd ./artifact
+        tar -czvf ./build.tar.gz ./build
+        zip -r ./build.zip ./build
+        cd ..
+
+    - name: Upload Build Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/build.tar.gz
+        asset_name: firmware.tar.gz
+        asset_content_type: application/gzip
+    
+    - name: Upload Build Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/build.zip
+        asset_name: firmware.zip
+        asset_content_type: application/zip
