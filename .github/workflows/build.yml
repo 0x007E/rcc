@@ -1,0 +1,158 @@
+name: RCC Build Pipeline
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  export-kicad:
+    env:
+      BaseFileName: "RCC"
+      SchematicFileExtension: "kicad_sch"
+      PCBFileExtension: "kicad_pcb"
+      OutputFolder: "./output"
+      ConfigFilePath: ".kibot/build.kibot.yaml"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch repository
+      uses: actions/checkout@v4
+    
+    - name: Prepare output directory
+      run: |
+        mkdir -p ${{ env.OutputFolder }}
+        cp -r ./pcb ${{ env.OutputFolder }}/kicad
+        cp ./LICENSE ${{ env.OutputFolder }}
+
+    - name: Run KiBOT
+      uses: INTI-CMNB/KiBot@v2_dk7
+      with:
+        config: ${{ env.ConfigFilePath }}
+        dir: ${{ env.OutputFolder }}
+        schema: "./pcb/${{ env.BaseFileName }}.${{ env.SchematicFileExtension }}"
+        board: "./pcb/${{ env.BaseFileName }}.${{ env.PCBFileExtension }}"
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: kicad-export
+        path: ${{ env.OutputFolder }}
+        retention-days: 1
+
+  export-freecad:
+    env:
+      FREECADVERSION: "1.0.2"
+      FreeCADFileName: "./mechanical/housing.FCStd"
+      OutputFolder: "./output"
+      PartType: "PartDesign::Body"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch repository
+      uses: actions/checkout@v4
+    
+    - name: Prepare output directory
+      run: |
+        mkdir -p ${{ env.OutputFolder }}
+        cp -r ./mechanical ${{ env.OutputFolder }}
+        cp ./LICENSE ${{ env.OutputFolder }}
+
+    - name: Install FreeCAD
+      run: |
+          wget https://github.com/FreeCAD/FreeCAD/releases/download/${{ env.FREECADVERSION }}/FreeCAD_${{ env.FREECADVERSION }}-conda-Linux-x86_64-py311.AppImage
+          chmod 0777 FreeCAD_${{ env.FREECADVERSION }}-conda-Linux-x86_64-py311.AppImage
+          ./FreeCAD_${{ env.FREECADVERSION }}-conda-Linux-x86_64-py311.AppImage --appimage-extract
+    - name: Get FreeCAD Export
+      run: |
+          git clone https://github.com/0x007E/pyfreecadexport.git
+    - name: Export STEP Files
+      run: |
+          ./squashfs-root/usr/bin/python ./pyfreecadexport/src/pyfreecadexport.py -f "${{ env.FreeCADFileName }}" -p "${{ env.PartType }}" -d "${{ env.OutputFolder }}" -e "step" -l "squashfs-root/usr/lib/"
+          ./squashfs-root/usr/bin/python ./pyfreecadexport/src/pyfreecadexport.py -f "${{ env.FreeCADFileName }}" -p "${{ env.PartType }}" -d "${{ env.OutputFolder }}" -e "stl" -l "squashfs-root/usr/lib/"
+    
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: freecad-export
+        path: ${{ env.OutputFolder }}
+        retention-days: 1
+  
+  build-firmware:
+    env:
+      TOOLCHAIN: "3.7.0.1796"
+      DFP: "ATtiny_DFP.2.0.368"
+      DEVICE: "attiny402"
+      OUTPUT_FOLDER: "./output"
+      LIBRARY_PATH: "./firmware/RCC_FW_1_0"
+      PROJECT_PATH: "./firmware/RCC_FW_1_0"
+      FIRMWARE_NAME: "rcc_t402"
+      PREPROCESSOR: "-DF_CPU=20000000UL"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch repository
+      uses: actions/checkout@v5
+    - name: Copy License
+      run: |
+          mkdir -p ${{ env.OUTPUT_FOLDER }}
+          cp ./LICENSE.md ${{ env.OUTPUT_FOLDER }}
+    - name: Install zip
+      run: sudo apt-get install -y zip
+    - name: install-build-tools
+      run: |
+          wget https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/avr8-gnu-toolchain-${{ env.TOOLCHAIN }}-linux.any.x86_64.tar.gz
+          tar -xf *.tar.gz
+    - name: install-dfp-package
+      run: |
+          wget http://packs.download.atmel.com/Atmel.${{ env.DFP }}.atpack
+          unzip *.atpack -d ./DFP
+    - name: build-firmware
+      run: |
+          mkdir -p temp
+
+          build_with_defines() {
+            local defines="$1"
+            local libraries=""
+
+            while read -r file; do
+              local filename=$(basename -- "$file")
+              filename="${filename%.*}"
+
+              ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=${{ env.DEVICE }} -std=gnu99 \
+                -B ./DFP/gcc/dev/${{ env.DEVICE }} \
+                $defines \
+                -I ./DFP/include -c "${file}" -o "./temp/${filename}.o"
+
+              libraries+="./temp/${filename}.o "
+            done < <(find "${{ env.LIBRARY_PATH }}" -type f -name '*.c')
+
+            echo "$libraries"
+          }
+          
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=${{ env.DEVICE }} -std=gnu99 \
+            -B ./DFP/gcc/dev/${{ env.DEVICE }} \
+            -I ./DFP/include \
+            ${{ env.PREPROCESSOR }} \
+            -c ${{ env.PROJECT_PATH }}/main.c -o ./temp/main.o
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=${{ env.DEVICE }} \
+            -B ./DFP/gcc/dev/${{ env.DEVICE }} \
+            -I ./DFP/include \
+            -o ./temp/main.elf ./temp/main.o \
+            ${{ env.PREPROCESSOR }} \
+            $(build_with_defines "${{ env.PREPROCESSOR }}")
+          
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data \
+            -O ihex ./temp/main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.hex
+          ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 \
+            -O ihex ./temp/main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.eep
+
+          tar -czvf build.tar.gz ${{ env.OUTPUT_FOLDER }}
+          zip -r build.zip ${{ env.OUTPUT_FOLDER }}
+
+    - name: upload-firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-build
+        path: ${{ env.OUTPUT_FOLDER }}
+        retention-days: 1
