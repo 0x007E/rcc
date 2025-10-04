@@ -139,19 +139,19 @@ jobs:
             -B ./DFP/gcc/dev/${{ env.DEVICE }} \
             -I ./DFP/include \
             ${{ env.PREPROCESSOR }} \
-            -c ${{ env.PROJECT_PATH }}/main.c -o ./temp/main.o
+            -c ${{ env.PROJECT_PATH }}/main.c -o ./main.o
 
           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=${{ env.DEVICE }} \
             -B ./DFP/gcc/dev/${{ env.DEVICE }} \
             -I ./DFP/include \
-            -o ./temp/main.elf ./temp/main.o \
+            -o ./main.elf ./main.o \
             ${{ env.PREPROCESSOR }} \
             $(build_with_defines "${{ env.PREPROCESSOR }}")
           
           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data \
-            -O ihex ./temp/main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.hex
+            -O ihex ./main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.hex
           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 \
-            -O ihex ./temp/main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.eep
+            -O ihex ./main.elf ${{ env.OUTPUT_FOLDER }}/${{ env.FIRMWARE_NAME }}.eep
 
           tar -czvf build.tar.gz ${{ env.OUTPUT_FOLDER }}
           zip -r build.zip ${{ env.OUTPUT_FOLDER }}
