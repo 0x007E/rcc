@@ -129,6 +129,10 @@ jobs:
 
             echo "$libraries"
           }
+
+          if [[ "${{ env.LIBRARY_PATH }}" == "${{ env.PROJECT_PATH }}" ]]; then
+            rm -f ./temp/main.o
+          fi
           
           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=${{ env.DEVICE }} -std=gnu99 \
             -B ./DFP/gcc/dev/${{ env.DEVICE }} \
