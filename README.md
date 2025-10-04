@@ -6,9 +6,9 @@ The `RCC` project is based on a pcb with an [ATtiny402](#additional-information)
 
 | Experience | Level |
 |:------------|:-----:|
-| Soldering   | ![?%](https://progress-bar.xyz/15?progress_color=00ff00&suffix=%20Medium&width=120) |
+| Soldering   | ![?%](https://progress-bar.xyz/15?progress_color=00ff00&suffix=%20Low&width=120) |
 | Mechanical  | ![?%](https://progress-bar.xyz/15?progress_color=00ff00&suffix=%20Low&width=120) |
-| Software    | ![?%](https://progress-bar.xyz/20?progress_color=00ff00&suffix=%20Medium&width=120) |
+| Software    | ![?%](https://progress-bar.xyz/20?progress_color=00ff00&suffix=%20Low&width=120) |
 
 # Downloads
 
