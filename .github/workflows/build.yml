@@ -25,7 +25,7 @@ jobs:
       run: |
         mkdir -p ${{ env.OutputFolder }}
         cp -r ./pcb ${{ env.OutputFolder }}/kicad
-        cp ./LICENSE ${{ env.OutputFolder }}
+        cp ./LICENSE.md ${{ env.OutputFolder }}
 
     - name: Run KiBOT
       uses: INTI-CMNB/KiBot@v2_dk7
@@ -57,7 +57,7 @@ jobs:
       run: |
         mkdir -p ${{ env.OutputFolder }}
         cp -r ./mechanical ${{ env.OutputFolder }}
-        cp ./LICENSE ${{ env.OutputFolder }}
+        cp ./LICENSE.md ${{ env.OutputFolder }}
 
     - name: Install FreeCAD
       run: |
