@@ -88,6 +88,8 @@ The `RCC` is powerd with a `3V` battery (`CR2032`). It can be programmed over [U
 
 The leds are controlled by `SPI`. The interface is displayed in the [dataflow](#dataflow-diagram) diagram. There is a pre-configured firmware to use the cube or a library to implement own solutions.
 
+> A documentation of the code can be found here [https://0x007e.github.io/rcc](https://0x007e.github.io/rcc).
+
 ## Dataflow diagram
 
 ![Dataflow](./images/dataflow.png)
