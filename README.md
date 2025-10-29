@@ -2,6 +2,8 @@
 
 # `RCC` - RGB Color Cube
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/0x007E/rcc)
+
 The `RCC` project is based on a pcb with an [ATtiny402](#additional-information) and two [RGB LEDs](#additional-information) that are controlled via SPI-bus. The cube itself is controlled over a single push-button that enables/disables the cube and can be used to setup the color and intensity of the rgb leds.
 
 | Experience | Level |
