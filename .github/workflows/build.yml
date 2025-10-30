@@ -156,7 +156,7 @@ jobs:
     env:
       DOCUMENT_LANGUAGE: "ngerman"
       LATEX_PATH: "./docs/"
-      LATEX_FILENAME: "howto"
+      LATEX_FILENAME: "manual"
     needs: export-kicad
     runs-on: ubuntu-latest
     steps:
@@ -201,7 +201,7 @@ jobs:
     - name: Prepare file(s) for upload
       run: |
         mkdir -p ./output
-        cp ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.pdf ./output/howto_${{ env.DOCUMENT_LANGUAGE }}.pdf
+        cp ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.pdf ./output/${{ env.LATEX_FILENAME }}.pdf
 
     - name: upload-latex_de
       uses: actions/upload-artifact@v4
@@ -214,7 +214,7 @@ jobs:
     env:
       DOCUMENT_LANGUAGE: "english"
       LATEX_PATH: "./docs/"
-      LATEX_FILENAME: "howto"
+      LATEX_FILENAME: "manual"
     needs: export-kicad
     runs-on: ubuntu-latest
     steps:
@@ -259,7 +259,7 @@ jobs:
     - name: Prepare file(s) for upload
       run: |
         mkdir -p ./output
-        cp ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.pdf ./output/howto_${{ env.DOCUMENT_LANGUAGE }}.pdf
+        cp ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.pdf ./output/${{ env.LATEX_FILENAME }}.pdf
 
     - name: upload-latex_en
       uses: actions/upload-artifact@v4
