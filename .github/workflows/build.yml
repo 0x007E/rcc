@@ -151,3 +151,119 @@ jobs:
         name: firmware-build
         path: ${{ env.OUTPUT_FOLDER }}
         retention-days: 1
+    
+  build_latex_de:
+    env:
+      DOCUMENT_LANGUAGE: "ngerman"
+      LATEX_PATH: "./docs/"
+      LATEX_FILENAME: "howto"
+    needs: export-kicad
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Git repository
+      uses: actions/checkout@v4
+    
+    - name: Download KiCad Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: kicad-export
+        path: ./artifact/kicad
+    - name: Display structure
+      run: ls -R ./artifact/kicad
+    - name: Prepare Files
+      run: |
+        cp ./artifact/kicad/pcb/PCB.pdf ${{ env.LATEX_PATH }}
+
+        sed -i 's/^% \\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/\\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/' ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.tex
+
+        mkdir -p ${{ env.LATEX_PATH }}images
+        wget -O ${{ env.LATEX_PATH }}images/htl.png https://upload.wikimedia.org/wikipedia/commons/d/d0/HTL_Rankweil_logo.png
+        wget -O ${{ env.LATEX_PATH }}images/assembled.png https://raw.githubusercontent.com/0x007E/rcc/refs/heads/main/images/assembled.png
+        wget -O ${{ env.LATEX_PATH }}images/explosion.png https://raw.githubusercontent.com/0x007E/rcc/refs/heads/main/images/explosion.png
+        wget -O ${{ env.LATEX_PATH }}images/programmer_assembled.png https://raw.githubusercontent.com/0x007E/rcc_programmer/refs/heads/main/images/assembled.png
+        wget -O ${{ env.LATEX_PATH }}images/programmer_icon.png https://raw.githubusercontent.com/0x007E/rcc_programmer/refs/heads/main/images/programmer_icon.png
+        wget -O ${{ env.LATEX_PATH }}images/programmer_program.png https://raw.githubusercontent.com/0x007E/rcc_programmer/refs/heads/main/images/programmer_program.png
+    - name: Compile LaTeX document
+      uses: xu-cheng/latex-action@v4
+      with:
+        root_file: ${{ env.LATEX_FILENAME }}.tex
+        texlive_version: 2025
+        extra_system_packages: "inkscape"
+        #pre_compile: "tlmgr update --self && tlmgr update --all"
+        pre_compile: |
+          cd ${{ env.LATEX_PATH }}
+          latexmk -f -interaction=nonstopmode -shell-escape -pdf ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.tex || true
+        args: "-f -interaction=nonstopmode -shell-escape -pdf"
+        latexmk_shell_escape: true
+        continue_on_error: true
+        post_compile: cd ..
+    
+    - name: Prepare file(s) for upload
+      run: |
+        mkdir -p ./output
+        cp ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.pdf ./output/howto_${{ env.DOCUMENT_LANGUAGE }}.pdf
+
+    - name: upload-latex_de
+      uses: actions/upload-artifact@v4
+      with:
+        name: latex-build_de
+        path: ./output
+        retention-days: 1
+  
+  build_latex_en:
+    env:
+      DOCUMENT_LANGUAGE: "english"
+      LATEX_PATH: "./docs/"
+      LATEX_FILENAME: "howto"
+    needs: export-kicad
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Git repository
+      uses: actions/checkout@v4
+    
+    - name: Download KiCad Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: kicad-export
+        path: ./artifact/kicad
+    - name: Display structure
+      run: ls -R ./artifact/kicad
+    - name: Prepare Files
+      run: |
+        cp ./artifact/kicad/pcb/PCB.pdf ${{ env.LATEX_PATH }}
+
+        sed -i 's/^% \\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/\\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/' ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.tex
+
+        mkdir -p ${{ env.LATEX_PATH }}images
+        wget -O ${{ env.LATEX_PATH }}images/htl.png https://upload.wikimedia.org/wikipedia/commons/d/d0/HTL_Rankweil_logo.png
+        wget -O ${{ env.LATEX_PATH }}images/assembled.png https://raw.githubusercontent.com/0x007E/rcc/refs/heads/main/images/assembled.png
+        wget -O ${{ env.LATEX_PATH }}images/explosion.png https://raw.githubusercontent.com/0x007E/rcc/refs/heads/main/images/explosion.png
+        wget -O ${{ env.LATEX_PATH }}images/programmer_assembled.png https://raw.githubusercontent.com/0x007E/rcc_programmer/refs/heads/main/images/assembled.png
+        wget -O ${{ env.LATEX_PATH }}images/programmer_icon.png https://raw.githubusercontent.com/0x007E/rcc_programmer/refs/heads/main/images/programmer_icon.png
+        wget -O ${{ env.LATEX_PATH }}images/programmer_program.png https://raw.githubusercontent.com/0x007E/rcc_programmer/refs/heads/main/images/programmer_program.png
+    - name: Compile LaTeX document
+      uses: xu-cheng/latex-action@v4
+      with:
+        root_file: ${{ env.LATEX_FILENAME }}.tex
+        texlive_version: 2025
+        extra_system_packages: "inkscape"
+        #pre_compile: "tlmgr update --self && tlmgr update --all"
+        pre_compile: |
+          cd ${{ env.LATEX_PATH }}
+          latexmk -f -interaction=nonstopmode -shell-escape -pdf ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.tex || true
+        args: "-f -interaction=nonstopmode -shell-escape -pdf"
+        latexmk_shell_escape: true
+        continue_on_error: true
+        post_compile: cd ..
+    
+    - name: Prepare file(s) for upload
+      run: |
+        mkdir -p ./output
+        cp ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.pdf ./output/howto_${{ env.DOCUMENT_LANGUAGE }}.pdf
+
+    - name: upload-latex_en
+      uses: actions/upload-artifact@v4
+      with:
+        name: latex-build_en
+        path: ./output
+        retention-days: 1
