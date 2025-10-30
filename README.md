@@ -12,6 +12,13 @@ The `RCC` project is based on a pcb with an [ATtiny402](#additional-information)
 | Mechanical  | ![?%](https://progress-bar.xyz/15?progress_color=00ff00&suffix=%20Low&width=120) |
 | Software    | ![?%](https://progress-bar.xyz/20?progress_color=00ff00&suffix=%20Low&width=120) |
 
+# Manual
+
+| Language | File                                                                        | Description                                        |
+|:--------:|:---------------------------------------------------------------------------:|:--------------------------------------------------:|
+| English  | [pdf](https://github.com/0x007E/rcc/releases/latest/download/manual.en.pdf) | Assembly of PCB/housing and programming of the RCC |
+| German   | [pdf](https://github.com/0x007E/rcc/releases/latest/download/manual.de.pdf) | Assembly of PCB/housing and programming of the RCC |
+
 # Downloads
 
 | Type      | File               | Description              |
