@@ -57,7 +57,7 @@
 
 \begin{document}
 
-% \selectlanguage{ngerman}
+\selectlanguage{ngerman}
 % \selectlanguage{english}
 
 \renewcommand{\tablename}{Tab.}
@@ -132,7 +132,7 @@
 
 \programmerintroductiontext
 
-\begin{table}[ht]
+\begin{table}[!htbp]
   \renewcommand{\arraystretch}{1.2}
   \noindent
   \begin{minipage}{\textwidth}
@@ -158,32 +158,35 @@
   \end{minipage}
 \end{table}
 
-\vspace{-12pt}
-\noindent
-\begin{minipage}[t]{0.55\textwidth}
-  \vspace{0pt}
-  \centering
-  \includegraphics[width=\textwidth]{./images/programmer_program.png}
-  \captionof{figure}{\programmerfigureinterfacecaptiontext}
-  \label{fig:rcc-programming-interface}
-\end{minipage}%
-\hfill
-\begin{minipage}[t]{0.42\textwidth}
-  \vspace{0pt}
-  \centering
-  \begin{tabularx}{\textwidth}{|M{0.85cm}|X|}
-    \hline
-    \rowcolor{gray!20}
-    \raisebox{-.25\height}{\includesvg[height=0.55cm,inkscapelatex=false]{./symbol/warning}} & \textbf{\globalimportanttext} \\
-    \hline
-    \multicolumn{2}{|p{\dimexpr\textwidth-2\tabcolsep}|}{\programmertablenoticetext} \\
-    \hline
-  \end{tabularx}
-  \captionof{table}{\programmertablenoticecaption}
-  \label{tab:rcc-programmer-notice}
-\end{minipage}
+\vspace{-15pt}
+\begin{table}[!htbp]
+  \renewcommand{\arraystretch}{1.2}
+  \noindent
+  \begin{minipage}[t]{0.55\textwidth}
+    \vspace{0pt}
+    \centering
+    \includegraphics[width=\textwidth]{./images/programmer_program.png}
+    \caption{\programmerfigureinterfacecaptiontext}
+    \label{fig:rcc-programming-interface}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.42\textwidth}
+    \vspace{0pt}
+    \centering
+    \begin{tabularx}{\textwidth}{|M{0.85cm}|X|}
+      \hline
+      \rowcolor{gray!20}
+      \raisebox{-.25\height}{\includesvg[height=0.55cm,inkscapelatex=false]{./symbol/warning}} & \textbf{\globalimportanttext} \\
+      \hline
+      \multicolumn{2}{|p{\dimexpr\textwidth-2\tabcolsep}|}{\programmertablenoticetext} \\
+      \hline
+    \end{tabularx}
+    \caption{\programmertablenoticecaption}
+    \label{tab:rcc-programmer-notice}
+  \end{minipage}
+\end{table}
 
-\vspace{-5pt}
+\vspace{-10pt}
 \begin{table}[!ht]
   \renewcommand{\arraystretch}{1.2}
   \centering
