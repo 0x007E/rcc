@@ -1,0 +1,44 @@
+\newif\ifnotempty
+
+\newcommand{\fieldNotEmpty}[1]{
+  \def\temp{#1}%
+  \ifx\temp\empty
+    \notemptyfalse
+  \else
+    \notemptytrue
+  \fi
+}
+
+\begin{titlepage}
+	\title{\titleHeadline}
+	\subtitle{
+    \fieldNotEmpty{\titleLogo}
+    \ifnotempty
+      \begin{figure}[htb]
+          \centering
+          \includegraphics[width=\titleLogoWidth\textheight]{\titleLogo}
+          \caption{\titleLogoCaption}
+          \label{fig:titlepage-image}
+      \end{figure}
+    \fi
+    \fieldNotEmpty{\titleLogo}
+    \ifnotempty
+      \begin{center}
+        \Large \titleDescription
+      \end{center}
+    \fi
+    \fieldNotEmpty{\titleRepository}
+    \ifnotempty
+      \small Repository:\\
+      \begin{center}
+          \href{\titleRepository}{\texttt{\titleRepository}}
+      \end{center}
+      \iftitlepageqrcode
+        \qrcode[height=1in]{\titleRepository}
+      \fi
+    \fi
+  }
+	\author{\small \documentAuthor}
+	\date{\small \today}
+	\thispagestyle{empty}
+\end{titlepage}

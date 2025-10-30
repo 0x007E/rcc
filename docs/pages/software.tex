@@ -1,0 +1,108 @@
+\newcounter{softwaretnotecounter}
+
+\iflanguage{ngerman}{
+  \newcommand{\softwaresectiontitle}{Verwendete Software}
+  \newcommand{\softwaretableimage}{Abbildung}
+  \newcommand{\softwaretablename}{Name}
+  \newcommand{\softwaretabledescription}{Beschreibung}
+  \newcommand{\softwaretablecaptiontext}{Softwarekomponenten für das Projekt}
+
+  \newcommand{\softwareltspicetext}{Simulationssoftware für elektronische Schaltungen, weitverbreitet zum Entwurf und Testen von Schaltungen.}
+  \newcommand{\softwaremicrochipstudiotext}{Entwicklungsumgebung (IDE) zur Programmierung von Mikrocontrollern, insbesondere AVR und ARM.}
+  \newcommand{\softwarefreecadtext}{Open-Source CAD-Software für 3D-Modellierung, geeignet für technische Konstruktionen und Design.}
+  \newcommand{\softwarekicadtext}{Open-Source PCB-Design-Software, geeignet für die Erstellung von Leiterplattenlayouts.}
+  \newcommand{\softwaredremeldigilabslicertext}{Software zum Vorbereiten und Slicen von 3D-Druck-Modellen, speziell für Dremel 3D-Drucker optimiert.}
+
+  \newcommand{\softwarelogotext}{Die abgebildeten Logos sind markenrechtlich geschützte Symbole. Sie werden in dieser Dokumentation ausschließlich zur Identifikation der jeweiligen Softwareprodukte verwendet, ohne Werbeabsicht.}
+}{
+  \newcommand{\softwaresectiontitle}{Used Software}
+  \newcommand{\softwaretableimage}{Figure}
+  \newcommand{\softwaretablename}{Name}
+  \newcommand{\softwaretabledescription}{Description}
+  \newcommand{\softwaretablecaptiontext}{Software components for the project}
+
+  \newcommand{\softwareltspicetext}{Simulation software for electronic circuits, widely used for designing and testing circuits.}
+  \newcommand{\softwaremicrochipstudiotext}{Development environment (IDE) for programming microcontrollers, especially AVR and ARM.}
+  \newcommand{\softwarefreecadtext}{Open-source CAD software for 3D modeling, suitable for technical constructions and design.}
+  \newcommand{\softwarekicadtext}{Open-source PCB design software, suitable for creating printed circuit board layouts.}
+  \newcommand{\softwaredremeldigilabslicertext}{Software for preparing and slicing 3D print models, specifically optimized for Dremel 3D printers.}
+
+  \newcommand{\softwarelogotext}{The logos shown are protected by trademark law. They are used in this documentation solely for the identification of the respective software products, without any advertising intent.}
+}
+
+\section*{\softwaresectiontitle}
+\begin{table}[!ht]
+  \renewcommand{\arraystretch}{1.3}
+  \centering
+  \begin{threeparttable}
+    \begin{tabularx}{\linewidth}{|M{2.4cm}|M{2.2cm}|X|}
+      \hline
+      \rowcolor{gray!20}
+      \textbf{\softwaretableimage\tnote{*}} & \textbf{\softwaretablename} & \textbf{\softwaretabledescription} \\
+      \hline
+\ifsoftwarepagelineartechnology
+      \stepcounter{softwaretnotecounter}
+      \raisebox{-.25\height}{\includesvg[width=1.6cm,inkscapelatex=false]{./logo/linear_technology}} &
+      LT-Spice\tnote{(\thesoftwaretnotecounter)} &
+      \softwareltspicetext\\
+      \hline
+\fi
+\ifsoftwarepagemicrochipstudio
+      \stepcounter{softwaretnotecounter}
+      \raisebox{-.25\height}{\includesvg[width=1.6cm,inkscapelatex=false]{./logo/microchip}} &
+      Microchip Studio\tnote{(\thesoftwaretnotecounter)} &
+      \softwaremicrochipstudiotext\\
+      \hline
+\fi
+\ifsoftwarepagefreecad
+      \stepcounter{softwaretnotecounter}
+      \raisebox{-.25\height}{\includesvg[width=0.65cm,inkscapelatex=false]{./logo/freecad}} &
+      FreeCAD\tnote{(\thesoftwaretnotecounter)} &
+      \softwarefreecadtext\\
+      \hline
+\fi
+\ifsoftwarepagekicad
+      \stepcounter{softwaretnotecounter}
+      \raisebox{-.25\height}{\includesvg[width=0.65cm,inkscapelatex=false]{./logo/kicad}} &
+      KiCAD\tnote{(\thesoftwaretnotecounter)} &
+      \softwarekicadtext\\
+      \hline
+\fi
+\ifsoftwarepagedremeldigilabslicer
+      \stepcounter{softwaretnotecounter}
+      \raisebox{-.25\height}{\includesvg[width=1.6cm,inkscapelatex=false]{./logo/dremel}} &
+      Dremel 3D DigiLab Slicer\tnote{(\thesoftwaretnotecounter)} &
+      \softwaredremeldigilabslicertext\\
+      \hline
+\fi
+    \end{tabularx}
+    \caption{\softwaretablecaptiontext}
+    \label{tab:software-programme}
+    \begin{tablenotes}
+      \footnotesize
+      \item[*] \softwarelogotext
+      \item[~]
+\setcounter{softwaretnotecounter}{0}
+\ifsoftwarepagelineartechnology
+      \stepcounter{softwaretnotecounter}
+      \item[(\thesoftwaretnotecounter)] \url{https://www.analog.com/en/resources/design-tools-and-calculators.html}
+\fi
+\ifsoftwarepagemicrochipstudio
+      \stepcounter{softwaretnotecounter}
+      \item[(\thesoftwaretnotecounter)] \url{https://www.microchip.com/en-us/tools-resources/develop/microchip-studio}
+\fi
+\ifsoftwarepagefreecad
+      \stepcounter{softwaretnotecounter}
+      \item[(\thesoftwaretnotecounter)] \url{https://www.freecad.org/downloads.php}
+\fi
+\ifsoftwarepagekicad
+      \stepcounter{softwaretnotecounter}
+      \item[(\thesoftwaretnotecounter)] \url{https://www.kicad.org/download/}
+\fi
+\ifsoftwarepagedremeldigilabslicer
+      \stepcounter{softwaretnotecounter}
+      \item[(\thesoftwaretnotecounter)] \url{https://www.dremel.com/at/de/digilab/3d-druckersoftware}  
+\fi
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}

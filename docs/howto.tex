@@ -1,0 +1,244 @@
+\documentclass[a4paper,12pt]{scrartcl}
+
+\input{./preamble/packages.tex}
+\input{./preamble/branch.tex}
+
+\usepackage{listings}
+
+% Globale Parameter
+\setlength{\parindent}{0pt} % Kein Einrücken am Anfang eines Absatzes
+\newcommand{\documentAuthor}{R. GÄCHTER}
+
+% Header-Parameter
+\headertrue           % Header aktivieren
+  \newcommand{\headerLogo}{./images/htl.png}
+
+% Footer-Parameter
+\footertrue           % Footer aktivieren
+  \newcommand{\footerAuthor}{\documentAuthor}
+  \newcommand{\footerVersion}{1.0}
+
+% Page-Parameter
+% \acronymspagetrue         % Acronyme aktivieren
+% \tableofcontentspagetrue  % Inhaltsverzeichnis aktivieren
+\listoffigurespagetrue    % Abbildungsverzeichnis aktivieren
+\listoftablespagetrue     % Tabellenverzeichnis aktivieren
+% \bibliographypagetrue     % Literaturverzeichnis aktivieren
+
+% Titlepage-Parameter
+\titlepagetrue                  % Titelblatt aktivieren
+\titlepageqrcodetrue            % QR-Code auf dem Titelblatt aktivieren
+% \blankpageaftertitlepagetrue  % Leerseite nach dem Titelblatt aktivieren
+  \newcommand{\titleHeadline}{RCC - RGB LED Color Cube}
+  \newcommand{\titleLogo}{./images/assembled.png}
+  \newcommand{\titleLogoWidth}{0.35}
+  \newcommand{\titleRepository}{https://github.com/0x007e/rcc}
+
+% Softwarepage-Parameter
+\softwarepagetrue     % Software-Seite aktivieren
+  % \softwarepagelineartechnologytrue
+  \softwarepagemicrochipstudiotrue
+  \softwarepagefreecadtrue
+  \softwarepagekicadtrue
+  % \softwarepagedremeldigilabslicertrue
+
+\input{./preamble/tabular.tex}
+\input{./preamble/commands.tex}
+
+\ifheader
+  \input{./preamble/header.tex}
+\fi
+
+\iffooter
+  \input{./preamble/footer.tex}
+\fi
+
+% ##########################################################################
+
+\begin{document}
+
+% \selectlanguage{ngerman}
+% \selectlanguage{english}
+
+\renewcommand{\tablename}{Tab.}
+
+\iflanguage{ngerman}{
+  \renewcommand{\figurename}{Abb.}
+  \input{./data/data.de.tex}
+}{
+  \renewcommand{\figurename}{Fig.}
+  \input{./data/data.en.tex}
+}
+
+\iftitlepage
+  \input{./pages/titlepage.tex}
+  \maketitle
+
+  \thispagestyle{empty}
+  \newpage
+
+  \ifblankpageaftertitlepage
+    ~
+    \thispagestyle{empty}
+    \newpage
+  \fi
+\fi
+
+\ifsoftwarepage
+  \input{./pages/software.tex}
+
+  \thispagestyle{empty}
+  \newpage
+\fi
+
+\section*{\abstracttitle}
+\abstracttext
+
+\thispagestyle{empty}
+\newpage
+
+\setcounter{page}{1}
+
+\noindent\hfill\texttt{GAR@\today|\jobname.pdf}
+\vspace{-25pt}
+
+\section{\pcbsectiontitle}
+
+\begin{figure}[!htbp]
+  \vspace{-20pt}
+  \centering
+  \includegraphics[page=5, angle=90, scale=0.77, trim=20pt 20pt 20pt 20pt, clip]{pcb.pdf}
+  \caption{\pcbfigureassemblytopcaptiontext}
+  \label{fig:pcb-top-assembly}
+\end{figure}
+\newpage
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[page=6, angle=90, scale=0.77, trim=20pt 20pt 20pt 20pt, clip]{pcb.pdf}
+  \caption{\pcbfigureassemblybottomcaptiontext}
+  \label{fig:pcb-bottom-assembly}
+\end{figure}
+\newpage
+
+\section{\programmersectiontitle}
+
+\begin{wrapfigure}{r}{0.25\textwidth}
+  \vspace{-50pt}
+  \includegraphics[width=\linewidth]{./images/programmer_assembled.png}
+  \caption{\programmerfigureprogrammercaptiontext}
+  \label{fig:rcc-programmer-image}
+\end{wrapfigure}
+
+\programmerintroductiontext
+
+\begin{table}[ht]
+  \renewcommand{\arraystretch}{1.2}
+  \noindent
+  \begin{minipage}{\textwidth}
+    \begin{tabularx}{\textwidth}{|c|c|X|}
+      \hline
+      \rowcolor{gray!20}
+      \multicolumn{3}{|c|}{\textbf{\programmertabledownloadlinkstitle}} \\
+      \hline
+      \multirow{2}{*}{
+        \raisebox{-.5\height}{
+          \includegraphics[height=1.35cm]{./images/programmer_icon.png}
+        }
+      } & 
+      \href{https://0x007e.github.io/rcc_programmer/clickonce/setup.exe}{\textbf{Installer}}\footnote{\url{https://0x007e.github.io/rcc_programmer/clickonce/setup.exe}} &
+      \programmertabledownloadlinksclickoncetext \\
+      \cline{2-3}
+       & \href{https://github.com/0x007E/rcc_programmer/releases/latest/download/programmer.zip}{\textbf{Portable}}\footnote{\url{https://github.com/0x007E/rcc_programmer/releases/latest/download/programmer.zip}} &
+      \programmertabledownloadlinksportabletext \\
+      \hline
+    \end{tabularx}
+    \caption{\programmertabledownloadlinkscaptiontext}
+    \label{tab:rcc-programming-download-links}
+  \end{minipage}
+\end{table}
+
+\vspace{-12pt}
+\noindent
+\begin{minipage}[t]{0.55\textwidth}
+  \vspace{0pt}
+  \centering
+  \includegraphics[width=\textwidth]{./images/programmer_program.png}
+  \captionof{figure}{\programmerfigureinterfacecaptiontext}
+  \label{fig:rcc-programming-interface}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.42\textwidth}
+  \vspace{0pt}
+  \centering
+  \begin{tabularx}{\textwidth}{|M{0.85cm}|X|}
+    \hline
+    \rowcolor{gray!20}
+    \raisebox{-.25\height}{\includesvg[height=0.55cm,inkscapelatex=false]{./symbol/warning}} & \textbf{\globalimportanttext} \\
+    \hline
+    \multicolumn{2}{|p{\dimexpr\textwidth-2\tabcolsep}|}{\programmertablenoticetext} \\
+    \hline
+  \end{tabularx}
+  \captionof{table}{\programmertablenoticecaption}
+  \label{tab:rcc-programmer-notice}
+\end{minipage}
+
+\vspace{-5pt}
+\begin{table}[!ht]
+  \renewcommand{\arraystretch}{1.2}
+  \centering
+  \begin{tabularx}{\textwidth}{|M{0.85cm}|X|}
+      \hline
+      \rowcolor{gray!20}
+      \raisebox{-.25\height}{\includesvg[height=0.55cm,inkscapelatex=false]{./symbol/info}} & \textbf{\programmertableselfmadeupdititle} \\
+      \hline
+      \multicolumn{2}{|p{\dimexpr\textwidth-2\tabcolsep}|}{\programmertableselfmadeupditext} \\
+  \hline
+  \end{tabularx}
+  \caption{\programmertableselfmadeupdicaption}
+  \label{tab:rcc-programmer-selfmade-updi}
+\end{table}
+
+\newpage
+
+\section{\mechanicalsectiontitle}
+\mechanicalintroductiontext
+\subsection*{\mechanicalsubsectionsteps}
+
+\begin{itemize}
+  \setlength\itemsep{-5pt}
+  \setlength\parskip{5pt}
+  \csvreader[head to column names]{\mechanicalstepsfile}{}
+  {
+    \item \itemtext
+  }
+\end{itemize}
+
+\begin{figure}[htb]
+  \vspace{-15pt}
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/explosion.png}
+  \caption{\mechanicalfigurecaptionexplosion}
+  \label{fig:mechanical-explosion}
+\end{figure}
+\newpage
+
+\iflistoffigurespage
+  \listoffigures
+\fi
+
+\iflistoftablespage
+  \listoftables
+\fi
+
+\iflistoffigurespage
+  \thispagestyle{empty}
+  \newpage
+\else
+  \iflistoftablespage
+    \thispagestyle{empty}
+    \newpage
+  \fi
+\fi
+
+\end{document}

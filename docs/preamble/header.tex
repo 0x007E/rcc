@@ -1,0 +1,18 @@
+% Paket für Kopf- und Fußzeilen
+\usepackage[automark,headsepline=0.4pt:1.0\textwidth,footsepline=0.4pt:1.0\textwidth]{scrlayer-scrpage}
+% Paket für Gesamtseitenzahl
+\usepackage{lastpage}
+
+\pagestyle{scrheadings}     % Kopf- und Fußzeilen-Stil setzen
+
+% Standard-Stile von Kopf- und Fußzeilen entfernen
+\clearpairofpagestyles
+
+\ihead{\includegraphics[height=1.25cm]{\headerLogo}}
+\chead{}
+\ohead{
+  \parbox[t]{15cm}{
+    \raggedleft
+    \headerText
+  }
+}

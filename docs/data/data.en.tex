@@ -1,0 +1,41 @@
+
+\newcommand{\headerText}{\textbf{HTL-Rankweil}\\\texttt{Department of Electronics/Informatics}}
+\newcommand{\titleLogoCaption}{Assembled Cube}
+\newcommand{\titleDescription}{\small The RCC project is based on a pcb with an ATtiny402 and two RGB LEDs that are controlled via SPI-bus. The cube itself is controlled over a single push-button that enables/disables the cube and can be used to setup the color and intensity of the leds.\\}
+
+\newcommand{\globalimportanttext}{Important:}
+
+\newcommand{\abstracttitle}{Abstract}
+\newcommand{\abstracttext}{
+The \texttt{RCC} (RGB LED Color Cube) project is an embedded system based on a PCB with an \texttt{ATtiny402}\footnote{\url{https://link.sunriax.at/MecTz}} microcontroller controlling two RGB LEDs\footnote{\url{https://link.sunriax.at/nBUNH}} via SPI communication. The system features a user interface with a single push-button to toggle the cube and adjust its color and brightness settings. It includes comprehensive hardware designs, firmware, and libraries for easy integration and customization. The project leverages KiCAD for PCB design, FreeCAD for housing, and Microchip Studio for firmware development, emphasizing modularity and professional production readiness through automated build processes using GitHub Actions. This setup provides a compact, versatile, and programmable RGB lighting solution suitable for prototyping and educational purposes in electronic and embedded systems development.
+\newline
+The assembly of the PCB is carried out using a semi-automatic placement machine to ensure precise and efficient component mounting. Soldering of the PCB components is performed with a vapor phase soldering system, which provides uniform heat distribution and high-quality solder joints. The battery holder is soldered manually using conventional soldering methods to allow for careful handling of this specific component. The enclosure is produced by 3D printing, enabling rapid prototyping with high accuracy and fine detail. Additionally, the acrylic plate on the bottom side of the enclosure is cut and engraved using a CO\textsubscript{2} laser cutter, ensuring precise shaping and custom surface markings.
+\newline
+This process guarantees a professionally assembled and finished product combining automated manufacturing techniques with manual precision and advanced fabrication technologies.
+}
+
+\newcommand{\pcbsectiontitle}{PCB Assembly}
+\newcommand{\pcbfigureassemblytopcaptiontext}{PCB Top fabrication and assembly layout}
+\newcommand{\pcbfigureassemblybottomcaptiontext}{PCB Bottom fabrication and assembly layout}
+
+\newcommand{\programmersectiontitle}{Firmware programming}
+\newcommand{\programmerfigureprogrammercaptiontext}{Programmer}
+\newcommand{\programmerintroductiontext}{Using the \texttt{programming tool} to flash the \texttt{ATtiny402} via \texttt{UPDI} interface is straightforward. Just download and install the required software and flash it with the \texttt{RCC Programming Toolkit}\footnote{\url{https://github.com/0x007e/rcc_programmer}} over the implemented USB-to-UART bridge in the \texttt{RCC-Programmer}. The \texttt{programming tool} itself can be installed or used as a portable application. The application itself provides a simple user interface to flash the firmware onto the \texttt{RCC} device. Therefore the color and intensitry of the LEDs can be adjusted within the application before flashing it onto the device.}
+\newcommand{\programmertabledownloadlinkstitle}{RCC - Programming Software (Windows x64)}
+\newcommand{\programmertabledownloadlinksclickoncetext}{ClickOnce installer that updates automatically when new versions are available.}
+\newcommand{\programmertabledownloadlinksportabletext}{Portable version that can be run without installation but needs to be updated manually.}
+\newcommand{\programmertabledownloadlinkscaptiontext}{Download Links}
+\newcommand{\programmerfigureinterfacecaptiontext}{Programming Interface}
+\newcommand{\programmertablenoticetext}{The \textbf{RCC}-Cube is powered through the USB-UART bridge (through the \texttt{Pogo}-pins) with \texttt{3V3} and does not require a battery. It must be ensured that the \textbf{RCC} device is \textbf{\textcolor{red}{not powered by battery to avoid damage to the device!}}}
+\newcommand{\programmertablenoticecaption}{Programmer Notice}
+\newcommand{\programmertableselfmadeupdititle}{Using of external UPDI-Adapters}
+\newcommand{\programmertableselfmadeupditext}{A selfmade UPDI adapter can also be used within an FT232 USB-to-UART bridge or a similar module according to the schematics provided on the \texttt{UPDI}\footnote{\url{https://github.com/0x007e/updi}} project page. The connection setup can be found on the programmer project site\footnote{\url{https://github.com/0x007e/rcc_programmer}} itself.}
+\newcommand{\programmertableselfmadeupdicaption}{UPDI-Adapter Information}
+
+\newcommand{\mechanicalsectiontitle}{Mechanical Assembly}
+\newcommand{\mechanicalintroductiontext}{The mechanical assembly is done by assembling the 3D printed enclosure parts together with the laser-cut acrylic plate. The PCB is mounted inside the enclosure using the integrated mounting features. The battery has to be mounted before the PCB is placed inside the enclosure.}
+\newcommand{\mechanicalsubsectionsteps}{Necessary steps:}
+\newcommand{\mechanicalfigurecaptionexplosion}{Exploded view of the mechanical assembly}
+
+\newcommand{\mechanicaltextfile}{./data/mechanicaltext.en.csv}
+\newcommand{\mechanicalstepsfile}{./data/mechanicalsteps.en.csv}

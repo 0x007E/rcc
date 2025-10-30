@@ -1,0 +1,41 @@
+
+\newcommand{\headerText}{\textbf{HTL-Rankweil}\\\texttt{Abteilung für Elektronik/Informatik}}
+\newcommand{\titleLogoCaption}{Zusammengesetzter Cube}
+\newcommand{\titleDescription}{\small Das RCC-Projekt basiert auf einer Platine mit einem ATtiny402 und zwei RGB-LEDs, die über den SPI-Bus gesteuert werden. Der Cube selbst wird über einen einzigen Taster gesteuert, der den Cube ein- und ausschaltet und zur Einrichtung der Farbe und Helligkeit der LEDs verwendet werden kann.\\}
+
+\newcommand{\globalimportanttext}{Wichtig:}
+
+\newcommand{\abstracttitle}{Einleitung}
+\newcommand{\abstracttext}{
+Das \texttt{RCC} (RGB LED Color Cube) Projekt ist ein eingebettetes System, das auf einer PCB mit einem \texttt{ATtiny402}\footnote{\url{https://link.sunriax.at/MecTz}} Mikrocontroller basiert, der zwei RGB-LEDs\footnote{\url{https://link.sunriax.at/nBUNH}} über SPI-Kommunikation steuert. Das System verfügt über eine Benutzeroberfläche mit einem einzigen Taster, um den Cube ein- und auszuschalten und die Farbe sowie die Helligkeitseinstellungen anzupassen. Es umfasst umfassende Hardware-Designs, Firmware und Bibliotheken für eine einfache Integration und Anpassung. Das Projekt nutzt KiCAD für das PCB-Design, FreeCAD für das Gehäuse und Microchip Studio für die Firmware-Entwicklung und legt dabei Wert auf Modularität und professionelle Produktionsbereitschaft durch automatisierte Build-Prozesse mit GitHub Actions. Dieses Setup bietet eine kompakte, vielseitige und programmierbare RGB-Beleuchtungslösung, die sich für Prototyping und Bildungszwecke in der Entwicklung von Elektronik- und eingebetteten Systemen eignet.
+\newline
+Die Montage der PCB erfolgt mit einer halbautomatischen Bestückungsmaschine, um eine präzise und effiziente Bauteilmontage sicherzustellen. Das Löten der PCB-Bauteile erfolgt mit einem Vapor-Phase-Lötverfahren, das eine gleichmäßige Wärmeverteilung und hochwertige Lötverbindungen gewährleistet. Der Batteriefach wird manuell mit herkömmlichen Lötmethoden verlötet, um eine sorgfältige Handhabung dieses spezifischen Bauteils zu ermöglichen. Das Gehäuse wird durch 3D-Druck hergestellt, was eine schnelle Prototypenerstellung mit hoher Genauigkeit und feinen Details ermöglicht. Darüber hinaus wird die Acrylplatte auf der Unterseite des Gehäuses mit einem CO\textsubscript{2} Laser Cutter zugeschnitten und graviert, um präzise Formen und individuelle Oberflächenmarkierungen zu gewährleisten.
+\newline
+Dieser Prozess garantiert ein professionell montiertes und fertiges Produkt, das automatisierte Fertigungstechniken mit manueller Präzision und fortschrittlichen Fertigungstechnologien kombiniert.
+}
+
+\newcommand{\pcbsectiontitle}{PCB Montage}
+\newcommand{\pcbfigureassemblytopcaptiontext}{PCB Top-Bearbeitungs- und Montagelayout}
+\newcommand{\pcbfigureassemblybottomcaptiontext}{PCB Bottom-Bearbeitungs- und Montagelayout}
+
+\newcommand{\programmersectiontitle}{Firmware-Programmierung}
+\newcommand{\programmerfigureprogrammercaptiontext}{Programmer}
+\newcommand{\programmerintroductiontext}{Die Verwendung des \texttt{Programmiergeräts} zum Flashen des \texttt{ATtiny402} über die \texttt{UPDI}-Schnittstelle ist unkompliziert. Die erforderliche Software zum Flashen kann über das \texttt{RCC Programming Repository}\footnote{\url{https://github.com/0x007e/rcc_programmer}} heruntergeladen werden. Über die USB-to-UART-Brücke wird die Firmware auf den Mikrocontroller übertragen. Die Anwendung selbst bietet eine einfache Benutzeroberfläche, um die Firmware auf den \texttt{RCC} zu übertragen. Die Farbe und die Intensität der LEDs kann innerhalb der Anwendung angepasst werden, bevor sie auf den \texttt{RCC} übertragen werden.}
+\newcommand{\programmertabledownloadlinkstitle}{RCC - Programmier-Software (Windows x64)}
+\newcommand{\programmertabledownloadlinksclickoncetext}{ClickOnce-Installer, der automatisch aktualisiert wird, wenn neue Versionen verfügbar sind.}
+\newcommand{\programmertabledownloadlinksportabletext}{Portable Version, die ohne Installation ausgeführt werden kann, aber manuell aktualisiert werden muss.}
+\newcommand{\programmertabledownloadlinkscaptiontext}{Download-Links}
+\newcommand{\programmerfigureinterfacecaptiontext}{Programmierschnittstelle}
+\newcommand{\programmertablenoticetext}{Der \textbf{RCC}-Cube wird durch die USB-UART-Brücke (über die \texttt{Pogo}-Pins) mit \texttt{3V3} versorgt und benötigt keine Batterie. Es ist sicherzustellen, dass das \textbf{RCC}-Gerät \textbf{\textcolor{red}{nicht mit Batterie betrieben wird, um Schäden am Gerät zu vermeiden!}}}
+\newcommand{\programmertablenoticecaption}{Programmiergerät-Hinweis}
+\newcommand{\programmertableselfmadeupdititle}{Verwenden von externen UPDI-Adaptern}
+\newcommand{\programmertableselfmadeupditext}{Ein selbstgebauter UPDI-Adapter kann auch innerhalb einer FT232 USB-to-UART-Brücke oder eines ähnlichen Moduls gemäß den Schaltplänen auf der \texttt{UPDI}\footnote{\url{https://github.com/0x007e/updi}}-Projektseite verwendet werden. Die Verbindungsanordnung finden Sie auf der Programmierer-Projektseite\footnote{\url{https://github.com/0x007e/rcc_programmer}} selbst.}
+\newcommand{\programmertableselfmadeupdicaption}{UPDI-Adapter-Informationen}
+
+\newcommand{\mechanicalsectiontitle}{Mechanische Montage}
+\newcommand{\mechanicalintroductiontext}{Die mechanische Montage erfolgt durch das Zusammenfügen der 3D-gedruckten Gehäuseteile mit der lasergeschnittenen Acrylplatte. Die PCB wird mit den integrierten Montageschrauben im Gehäuse befestigt. Die Batterie muss montiert werden, bevor die PCB im Gehäuse platziert wird.}
+\newcommand{\mechanicalsubsectionsteps}{Notwendige Schritte:}
+\newcommand{\mechanicalfigurecaptionexplosion}{Explosionsansicht der mechanischen Montage}
+
+\newcommand{\mechanicaltextfile}{./data/mechanicaltext.de.csv}
+\newcommand{\mechanicalstepsfile}{./data/mechanicalsteps.de.csv}
