@@ -236,7 +236,7 @@ int main(void)
 			
 			switch (execute_command)
 			{
-				case 1:
+				case 2:
 					while(!(PORTA.IN & SWITCH))
 					{
                         led->red++;
@@ -244,7 +244,7 @@ int main(void)
                         _delay_ms(COLOR_FADE_DELAY_MS);
 					}
                     break;
-				case 2:
+				case 3:
 				    while(!(PORTA.IN & SWITCH))
 				    {
     				    led->green++;
@@ -252,7 +252,7 @@ int main(void)
     				    _delay_ms(COLOR_FADE_DELAY_MS);
 				    }
                     break;
-				case 3:
+				case 4:
 					while(!(PORTA.IN & SWITCH))
 					{
     					led->blue++;
@@ -260,7 +260,7 @@ int main(void)
     					_delay_ms(COLOR_FADE_DELAY_MS);
 					}
                     break;
-				case 4:
+				case 5:
 					while(!(PORTA.IN & SWITCH))
 					{
     					led->intensity++;
