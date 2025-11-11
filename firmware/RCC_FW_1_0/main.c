@@ -27,31 +27,19 @@ char EEMEM github[] = "github.com/0x007e/rcc";
 
 LED_Data EEMEM ee_led1  = {
 	0x03,
-	0x0F,
 	0x00,
-	0x0A
+	0xFF,
+	0xFF
 };
 
 LED_Data EEMEM ee_led2  = {
 	0x03,
+	0xFF,
 	0x00,
-	0x0F,
-	0x0A
+	0xFF
 };
 
-LED_Data led1  = {
-	0x01,
-	0x0F,
-	0x00,
-	0x0A
-};
-
-LED_Data led2  = {
-	0x01,
-	0x00,
-	0x0F,
-	0x0A
-};
+LED_Data led1, led2;
 
 /**
  * @brief Interrupt Service Routine for PORTA pin change or event.
