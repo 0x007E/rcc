@@ -196,8 +196,15 @@ int main(void)
 
         if((switch_count > 0) && ((systick - last_button_press) > SWITCH_COMMAND_EXECUTE_MS))
         {
-            execute_command = switch_count;
-            switch_count = 0;
+			if(switch_count == 1)
+			{
+				switch_count = 0;
+			}
+			else
+			{
+				execute_command = switch_count;
+				switch_count = 0;
+			}
         }
 		
 		if(execute_command)
