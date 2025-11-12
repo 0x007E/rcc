@@ -19,6 +19,10 @@ The `RCC` project is based on a pcb with an [ATtiny402](#additional-information)
 | English  | [pdf](https://github.com/0x007E/rcc/releases/latest/download/manual.en.pdf) | Assembly of PCB/housing and programming of the RCC |
 | German   | [pdf](https://github.com/0x007E/rcc/releases/latest/download/manual.de.pdf) | Assembly of PCB/housing and programming of the RCC |
 
+# Simulator
+
+With the [RCC-Simulator](https://0x007e.github.io/rcc-simulator/) different functions (e.g. power-on/-off, ...) can be simulated within a webpage.
+
 # Downloads
 
 | Type      | File               | Description              |
