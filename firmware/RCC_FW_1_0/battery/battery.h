@@ -42,7 +42,7 @@
          *
          * @note The setting of the `BATTERY_EMPTY_VALUE` depends on the voltage reference of the A/D converter and the input voltage of the channel.
          */
-        #define BATTERY_EMPTY_VALUE 990UL
+        #define BATTERY_EMPTY_VALUE 860UL
     #endif
 
     #include <avr/io.h>
