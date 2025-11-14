@@ -167,9 +167,32 @@ jobs:
         path: ./artifact/kicad
     - name: Display structure
       run: ls -R ./artifact/kicad
+    - name: Add fabrication overlay
+      run: |
+        cp ./artifact/kicad/blender/top.png ./top.kicad.png
+        cp ./artifact/kicad/blender/bottom.png ./bottom.kicad.png
+
+        sed 's/\$FILENAME\$/top.kicad.png/g' overlay.json > top.page.json
+        sed 's/\$FILENAME\$/bottom.kicad.png/g' overlay.json > bottom.page.json
+    
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12' 
+    - run: |
+        pip install pypdf --break-system-packages
+        pip install fpdf2 --break-system-packages
+
+        git clone https://github.com/0x007E/pypdftool.git
+
+        python3 ./pypdftool/src/pdfpage.py -c ./top.page.json -o ./overlay.top.pdf
+        python3 ./pypdftool/src/pdfoverlay.py -i ./artifact/kicad/pcb/PCB.pdf -p ./overlay.top.pdf -o ./PCB.top.pdf -n 5
+        python3 ./pypdftool/src/pdfpage.py -c ./bottom.page.json -o ./overlay.bottom.pdf
+        python3 ./pypdftool/src/pdfoverlay.py -i ./PCB.top.pdf -p ./overlay.bottom.pdf -o ./PCB.pdf -n 6
+
     - name: Prepare Files
       run: |
-        cp ./artifact/kicad/pcb/PCB.pdf ${{ env.LATEX_PATH }}
+        cp ./PCB.pdf ${{ env.LATEX_PATH }}
 
         sed -i 's/^% \\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/\\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/' ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.tex
 
@@ -225,9 +248,32 @@ jobs:
         path: ./artifact/kicad
     - name: Display structure
       run: ls -R ./artifact/kicad
+    - name: Add fabrication overlay
+      run: |
+        cp ./artifact/kicad/blender/top.png ./top.kicad.png
+        cp ./artifact/kicad/blender/bottom.png ./bottom.kicad.png
+
+        sed 's/\$FILENAME\$/top.kicad.png/g' overlay.json > top.page.json
+        sed 's/\$FILENAME\$/bottom.kicad.png/g' overlay.json > bottom.page.json
+    
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12' 
+    - run: |
+        pip install pypdf --break-system-packages
+        pip install fpdf2 --break-system-packages
+
+        git clone https://github.com/0x007E/pypdftool.git
+
+        python3 ./pypdftool/src/pdfpage.py -c ./top.page.json -o ./overlay.top.pdf
+        python3 ./pypdftool/src/pdfoverlay.py -i ./artifact/kicad/pcb/PCB.pdf -p ./overlay.top.pdf -o ./PCB.top.pdf -n 5
+        python3 ./pypdftool/src/pdfpage.py -c ./bottom.page.json -o ./overlay.bottom.pdf
+        python3 ./pypdftool/src/pdfoverlay.py -i ./PCB.top.pdf -p ./overlay.bottom.pdf -o ./PCB.pdf -n 6
+
     - name: Prepare Files
       run: |
-        cp ./artifact/kicad/pcb/PCB.pdf ${{ env.LATEX_PATH }}
+        cp ./PCB.pdf ${{ env.LATEX_PATH }}
 
         sed -i 's/^% \\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/\\selectlanguage{${{ env.DOCUMENT_LANGUAGE }}}/' ${{ env.LATEX_PATH }}${{ env.LATEX_FILENAME }}.tex
 
