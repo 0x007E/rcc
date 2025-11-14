@@ -1,0 +1,25 @@
+{
+    "format": {
+        "pagetype": "A4",
+        "orientation": "L"
+    },
+    "content": {
+        "text": [],
+        "link": [],
+        "image": [
+            {
+                "path": "$FILENAME$",
+                "position": {
+                    "X": 215,
+                    "Y": 20
+                },
+                "size": {
+                    "width": 60,
+                    "height": 60
+                }
+            }
+        ],
+        "rectangle": [],
+        "circle": []
+    }
+}
